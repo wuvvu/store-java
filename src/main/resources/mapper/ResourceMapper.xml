@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.store.mapper.ResourceMapper">
+
+    <!-- 二级缓存-->
+    <!--<cache readOnly="true" />-->
+
+    <resultMap id="CarouselResult" type="Carousel">
+        <id property="carousel_id" column="carousel_id" />
+        <result property="imgPath" column="imgPath" />
+        <result property="describes" column="describes" />
+    </resultMap>
+
+    <select id="listCarousels" resultMap="CarouselResult">
+        select * from carousel
+    </select>
+
+
+</mapper>

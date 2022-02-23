@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.store.mapper.OrderMapper">
+
+    <!-- 二级缓存-->
+    <!--<cache readOnly="true" />-->
+
+    <resultMap id="OrderResult" type="Order">
+        <id property="id" column="id" />
+        <result property="order_id" column="order_id" />
+        <result property="user_id" column="user_id" />
+        <result property="product_id" column="product_id" />
+        <result property="product_num" column="product_num" />
+        <result property="product_price" column="product_price" />
+        <result property="order_time" column="order_time" />
+    </resultMap>
+
+    <select id="getOrderIdByUserId" resultMap="OrderResult">
+        select order_id from orders where user_id = #{user_id} group by order_id desc
+    </select>
+
+    <select id="getOrderByUserId" resultMap="OrderResult">
+        select * from orders where user_id = #{user_id} order by order_time desc
+    </select>
+
+    <insert id="addOrder" parameterType="java.util.List">
+        insert ignore into orders(order_id, user_id, product_id, product_num, product_price, order_time) values
+        <foreach collection="list" item="order" index="index" separator=",">
+            (#{order.order_id},
+             #{order.user_id},
+             #{order.product_id},
+             #{order.product_num},
+             #{order.product_price},
+             #{order.order_time})
+        </foreach>
+    </insert>
+
+    <resultMap id="ShoppingCartResult" type="ShoppingCart">
+        <id property="id" column="id" />
+        <result property="user_id" column="user_id" />
+        <result property="product_id" column="product_id" />
+        <result property="num" column="num" />
+    </resultMap>
+
+    <select id="getShoppingCartByUserId" resultMap="ShoppingCartResult">
+        select * from shoppingCart where user_id = #{user_id}
+    </select>
+
+    <select id="getShoppingCartByUserIdAndProductId" resultMap="ShoppingCartResult">
+        select * from shoppingCart where user_id = #{user_id} and product_id = #{product_id} limit 1
+    </select>
+
+    <insert id="addShoppingCart">
+        insert ignore into shoppingCart values (null, #{user_id}, #{product_id}, 1)
+    </insert>
+
+    <update id="updateShoppingCart">
+        update shoppingCart set num = #{newNum} where user_id = #{user_id} and product_id = #{product_id}
+    </update>
+
+    <delete id="deleteShoppingCart">
+        delete from shoppingCart where user_id = #{user_id} and product_id = #{product_id}
+    </delete>
+
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

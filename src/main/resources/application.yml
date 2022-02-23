@@ -1,0 +1,25 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://server-4570:3306/storeDB?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong #&allowMultiQueries=true
+    hikari:
+      pool-name: HikariCP
+      username: wu
+      password: Ct9638527410!@#$%^
+      minimum-idle: 5
+      maximum-pool-size: 20
+      idle-timeout: 10000
+      max-lifetime: 30000
+      connection-timeout: 30000
+      connection-test-query: select 1
+
+mybatis:
+  typeAliasesPackage: com.example.store.model
+  mapperLocations: classpath:mapper/*.xml
+
+logging:
+  level:
+    com.example.store.mapper: debug

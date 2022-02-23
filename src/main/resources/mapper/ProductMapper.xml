@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.store.mapper.ProductMapper">
+
+    <!-- 二级缓存-->
+    <!--<cache readOnly="true" />-->
+
+    <resultMap id="CarouselResult" type="Carousel">
+        <id property="carousel_id" column="id" />
+        <result property="imgPath" column="imgPath" />
+        <result property="describes" column="describes" />
+    </resultMap>
+
+    <select id="listCarousels" resultMap="CarouselResult">
+        select * from carousel
+    </select>
+
+    <resultMap id="CategoryResult" type="Category">
+        <id property="category_id" column="category_id" />
+        <result property="category_name" column="category_name" />
+    </resultMap>
+
+    <select id="getCategory" resultMap="CategoryResult">
+        select * from category
+    </select>
+
+    <select id="getCategoryByName" resultMap="CategoryResult">
+        select * from category where category_name = #{categoryName} limit 1
+    </select>
+
+    <resultMap id="ProductPictureResult" type="ProductPicture">
+        <id property="id" column="id" />
+        <result property="product_id" column="product_id" />
+        <result property="product_picture" column="product_picture" />
+        <result property="intro" column="intro" />
+    </resultMap>
+
+    <select id="getDetailsPictureByProductId" resultMap="ProductPictureResult">
+        select * from product_picture where product_id = #{productId}
+    </select>
+
+    <resultMap id="ProductResult" type="Product">
+        <id property="product_id" column="product_id" />
+        <result property="product_name" column="product_name" />
+        <result property="category_id" column="category_id" />
+        <result property="product_title" column="product_title" />
+        <result property="product_intro" column="product_intro" />
+        <result property="product_picture" column="product_picture" />
+        <result property="product_price" column="product_price" />
+        <result property="product_selling_price" column="product_selling_price" />
+        <result property="product_num" column="product_num" />
+        <result property="product_sales" column="product_sales" />
+    </resultMap>
+
+    <select id="getAllProduct" resultMap="ProductResult">
+        select * from product where isDeleted = 0
+    </select>
+
+    <select id="getProductById" resultMap="ProductResult">
+        select * from product where product_id = #{id} limit 1
+    </select>
+
+    <select id="getPromoProductByCategoryId" resultMap="ProductResult">
+        select * from product where category_id = #{categoryId} order by product_sales desc limit 7
+    </select>
+
+    <select id="getProductByCategoryId" resultMap="ProductResult">
+        select * from product where category_id = #{categoryId} order by product_sales desc
+    </select>
+
+    <select id="getProductBySearch" resultMap="ProductResult">
+        select * from product
+        where (product_name like concat('%', #{search}, '%')
+           or product_title like concat('%', #{search}, '%')
+           or product_intro like concat('%', #{search}, '%'))
+            and isDeleted = 0
+        order by product_sales desc
+    </select>
+
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
