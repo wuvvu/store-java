@@ -2,10 +2,13 @@ package com.example.store.service;
 
 import com.example.store.mapper.AdminMapper;
 import com.example.store.model.Product;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.google.gson.*;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class AdminService {
@@ -23,20 +26,30 @@ public class AdminService {
      */
     public String addProduct(String json) {
         JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
+        List<String> pictureList = new ArrayList<>();
+        JsonArray pictureArray = jsonObject.get("product_picture").getAsJsonArray();
+        for (JsonElement jsonElement : pictureArray) {
+            String pictureString = jsonElement.getAsString();
+            pictureList.add(pictureString);
+        }
         Product product = new Product();
+        product.setProduct_id(0);
         product.setProduct_intro(jsonObject.get("product_intro").getAsString());
         product.setProduct_name(jsonObject.get("product_name").getAsString());
         product.setProduct_num(jsonObject.get("product_num").getAsInt());
-        product.setProduct_picture(jsonObject.get("product_picture").getAsString());
+        product.setProduct_picture(pictureList.get(0));
         product.setProduct_price(jsonObject.get("product_price").getAsBigDecimal());
-        product.setProduct_sales(jsonObject.get("product_sales").getAsInt());
+        product.setProduct_sales(0);
         product.setProduct_selling_price(jsonObject.get("product_selling_price").getAsBigDecimal());
         product.setProduct_title(jsonObject.get("product_title").getAsString());
         product.setCategory_id(jsonObject.get("category_id").getAsInt());
 
         int insertRows = adminMapper.addProduct(product);
+
+        int insertPictureRows = adminMapper.addProductPicture(product.getProduct_id(), pictureList);
+
         JsonObject responseJson = new JsonObject();
-        if (insertRows == 0) {
+        if (insertRows == 0 || insertPictureRows == 0) {
             responseJson.add("status", new JsonPrimitive(-1));
             responseJson.add("message", new JsonPrimitive("添加商品失败"));
             return responseJson.toString();
@@ -74,21 +87,29 @@ public class AdminService {
      */
     public String updateProduct(String json) {
         JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
+        List<String> pictureList = new ArrayList<>();
+        JsonArray pictureArray = jsonObject.get("product_picture").getAsJsonArray();
+        for (JsonElement jsonElement : pictureArray) {
+            String pictureString = jsonElement.getAsString();
+            pictureList.add(pictureString);
+        }
         Product product = new Product();
         product.setProduct_id(jsonObject.get("product_id").getAsInt());
         product.setProduct_name(jsonObject.get("product_name").getAsString());
         product.setProduct_num(jsonObject.get("product_num").getAsInt());
-        product.setProduct_picture(jsonObject.get("product_picture").getAsString());
+        product.setProduct_picture(pictureList.get(0));
         product.setProduct_price(jsonObject.get("product_price").getAsBigDecimal());
         product.setProduct_intro(jsonObject.get("product_intro").getAsString());
-        product.setProduct_sales(jsonObject.get("product_sales").getAsInt());
         product.setProduct_selling_price(jsonObject.get("product_selling_price").getAsBigDecimal());
         product.setProduct_title(jsonObject.get("product_title").getAsString());
         product.setCategory_id(jsonObject.get("category_id").getAsInt());
 
         int updateRows = adminMapper.updateProduct(product);
+        int deletePictures = adminMapper.deletePictureByProductId(product.getProduct_id());
+        int insertPictureRows = adminMapper.addProductPicture(product.getProduct_id(), pictureList);
+
         JsonObject responseJson = new JsonObject();
-        if (updateRows == 0) {
+        if (updateRows == 0 || deletePictures == 0 ||insertPictureRows == 0) {
             responseJson.add("status", new JsonPrimitive(-1));
             responseJson.add("message", new JsonPrimitive("修改商品信息失败"));
             return responseJson.toString();
@@ -98,6 +119,11 @@ public class AdminService {
         return responseJson.toString();
     }
 
+    /**
+     * 管理员端上架商品
+     * @param json 前端请求json(商品id)
+     * @return 商品上架状态
+     */
     public String onShelf(String json) {
         JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
         int productId = jsonObject.get("product_id").getAsInt();
@@ -111,6 +137,34 @@ public class AdminService {
         }
         responseJson.add("status", new JsonPrimitive(0));
         responseJson.add("message", new JsonPrimitive("上架商品成功"));
+        return responseJson.toString();
+    }
+
+    /**
+     * 分页获取所有的商品信息
+     * @param json 前端请求json(页码、偏移量)
+     * @return 商品信息、总数
+     */
+    public String getAllProduct(String json) {
+        JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
+
+        int currentPage = jsonObject.get("currentPage").getAsInt();
+        int pageSize = jsonObject.get("pageSize").getAsInt();
+
+        // int offset = (currentPage - 1) * pageSize;
+
+        PageHelper.startPage(currentPage, pageSize);
+        List<Product> productList = adminMapper.getAllProduct();
+
+        PageInfo<Product> pageInfo = new PageInfo<>(productList);
+
+        Gson gson = new Gson();
+
+        JsonObject responseJson = new JsonObject();
+        responseJson.add("code", new JsonPrimitive("001"));
+        responseJson.add("Product", gson.toJsonTree(productList).getAsJsonArray());
+        responseJson.add("total", new JsonPrimitive(pageInfo.getTotal()));
+
         return responseJson.toString();
     }
 }

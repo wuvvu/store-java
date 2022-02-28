@@ -46,17 +46,17 @@ public class UserController {
         return userService.register(json);
     }
 
-    @RequestMapping("/users/collect/addCollect")
+    @RequestMapping("/user/collect/addCollect")
     public String addCollect(@RequestBody String json) {
         return userService.addCollect(json);
     }
 
-    @RequestMapping("/users/collect/getCollect")
+    @RequestMapping("/user/collect/getCollect")
     public String getCollect(@RequestBody String json) {
         return userService.getCollect(json);
     }
 
-    @RequestMapping("/users/collect/deleteCollect")
+    @RequestMapping("/user/collect/deleteCollect")
     public String deleteCollect(@RequestBody String json) {
         return userService.deleteCollect(json);
     }

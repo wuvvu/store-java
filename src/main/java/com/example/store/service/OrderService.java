@@ -41,7 +41,7 @@ public class OrderService {
         }
 
         List<Order> orderList = orderMapper.getOrderByUserId(userId);
-        List<Order> ordersList = new ArrayList<>();
+        List<List<Order>> ordersList = new ArrayList<>();
 
         for (Order orderForId : orderIdList) {
             long orderId = orderForId.getOrder_id();
@@ -56,7 +56,7 @@ public class OrderService {
                     tempOrder.add(order);
                 }
             }
-            ordersList.addAll(tempOrder);
+            ordersList.add(tempOrder);
         }
 
         responseJson.add("code", new JsonPrimitive("001"));
@@ -79,15 +79,20 @@ public class OrderService {
 
         for (JsonElement productJsonElement : products) {
             JsonObject productJsonObject = productJsonElement.getAsJsonObject();
+            int productId = productJsonObject.get("productID").getAsInt();
+            int num = productJsonObject.get("num").getAsInt();
             Order order = new Order();
             order.setOrder_id(Long.parseLong("" + userId + timestamp));
             order.setUser_id(userId);
-            order.setProduct_id(productJsonObject.get("productID").getAsInt());
-            order.setProduct_num(productJsonObject.get("num").getAsInt());
+            order.setProduct_id(productId);
+            order.setProduct_num(num);
             order.setProduct_price((productJsonObject.get("price").getAsBigDecimal()));
             order.setOrder_time(timestamp);
 
             orderList.add(order);
+
+            int reduceProductNums = orderMapper.reduceProductByProductId(productId, num);
+            int increaseProductSales = orderMapper.increaseSalesByProductId(productId, num);
         }
 
         int insertRows = orderMapper.addOrder(orderList);
@@ -132,10 +137,12 @@ public class OrderService {
             Product product = productMapper.getProductById(shoppingCart.getProduct_id());
             ShoppingCart shoppingCartParse = new ShoppingCart();
             shoppingCartParse.setId(shoppingCart.getId());
+            shoppingCartParse.setUser_id(shoppingCart.getUser_id());
             shoppingCartParse.setProduct_id(shoppingCart.getProduct_id());
             shoppingCartParse.setProductName(product.getProduct_name());
             shoppingCartParse.setProductImg(product.getProduct_picture());
-            shoppingCartParse.setProduct_price(product.getProduct_price());
+            shoppingCartParse.setPrice(product.getProduct_price());
+            shoppingCartParse.setProduct_num(product.getProduct_num());
             shoppingCartParse.setNum(shoppingCart.getNum());
             shoppingCartParse.setCheck(false);
             shoppingCartData.add(shoppingCartParse);

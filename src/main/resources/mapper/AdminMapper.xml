@@ -16,14 +16,27 @@
         <result property="product_selling_price" column="product_selling_price" />
         <result property="product_num" column="product_num" />
         <result property="product_sales" column="product_sales" />
+        <result property="isDeleted" column="isDeleted" />
     </resultMap>
 
-    <insert id="addProduct" parameterType="Product">
-        insert ignore into product(product_id, product_name, category_id,
+    <select id="getAllProduct" resultMap="ProductResult">
+        select * from product
+    </select>
+
+    <insert id="addProduct" parameterType="Product" useGeneratedKeys="true" keyProperty="product_id">
+        insert ignore into product(product_name, category_id,
                                    product_title, product_intro, product_picture,
                                    product_price, product_selling_price, product_num, product_sales)
-                values (#{product_id}, #{product_name}, #{category_id}, #{product_title}, #{product_intro},
+                values (#{product_name}, #{category_id}, #{product_title}, #{product_intro},
                         #{product_picture}, #{product_price}, #{product_selling_price}, #{product_num}, #{product_sales})
+    </insert>
+
+    <insert id="addProductPicture">
+        insert ignore into product_picture(product_id, product_picture) values
+        <foreach collection="pictureList" item="picture" index="index" separator=",">
+            (#{product_id},
+            #{picture})
+        </foreach>
     </insert>
 
     <update id="offShelfById">
@@ -31,15 +44,20 @@
     </update>
 
     <update id="updateProduct">
-        update product set product_name = #{product_name}, category_id = #{category_id}, product_title = #{product_tile},
+        update product set product_name = #{product_name}, category_id = #{category_id}, product_title = #{product_title},
                            product_intro = #{product_intro}, product_picture = #{product_picture}, product_price = #{product_price},
-                           product_selling_price = #{product_selling_price}, product_num = #{product_num}, product_sales = #{product_sales}
+                           product_selling_price = #{product_selling_price}, product_num = #{product_num}
             where product_id = #{product_id} limit 1
     </update>
 
     <update id="onShelfById">
         update product set isDeleted = 0 where product_id = #{product_id} limit 1
     </update>
+
+    <delete id="deletePictureByProductId">
+        delete from product_picture where product_id = #{product_id}
+    </delete>
+
 </mapper>
 
 

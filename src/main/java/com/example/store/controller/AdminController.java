@@ -34,4 +34,9 @@ public class AdminController {
         return adminService.onShelf(json);
     }
 
+    @RequestMapping("/admin/product/getAllProduct")
+    public String getAllProduct(@RequestBody String json) {
+        return adminService.getAllProduct(json);
+    }
+
 }

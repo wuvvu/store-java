@@ -27,6 +27,10 @@ public class UserService {
         this.productMapper = productMapper;
     }
 
+    String usernameRule = "^[a-zA-Z][a-zA-Z0-9_]{4,15}$";
+
+    String passwordRule = "^[a-zA-Z]\\w{5,17}$";
+
     /**
      * 登录
      * @param json 前端传来的用户名和密码
@@ -45,7 +49,6 @@ public class UserService {
         }
 
         // 用户校验规则
-        String usernameRule = "/[a-zA-Z][a-zA-Z0-9_]{4,15}/";
         if (!username.matches(usernameRule)) {
             responseJson.add("code", new JsonPrimitive("003"));
             responseJson.add("msg", new JsonPrimitive("用户名不合法(以字母开头，允许5-16字节，允许字母数字下划线)"));
@@ -53,7 +56,6 @@ public class UserService {
         }
 
         // 密码校验规则
-        String passwordRule = "/[a-zA-Z]\\w{5,17}/";
         if (!password.matches(passwordRule)) {
             responseJson.add("code", new JsonPrimitive("003"));
             responseJson.add("msg", new JsonPrimitive("密码不合法(以字母开头，长度在6~18之间，只能包含字母、数字和下划线)"));
@@ -93,7 +95,6 @@ public class UserService {
             return responseJson.toString();
         }
 
-        String usernameRule = "/[a-zA-Z][a-zA-Z0-9_]{4,15}/";
         if (!username.matches(usernameRule)) {
             responseJson.add("code", new JsonPrimitive("003"));
             responseJson.add("msg", new JsonPrimitive("用户名不合法(以字母开头，允许5-16字节，允许字母数字下划线)"));
@@ -131,7 +132,6 @@ public class UserService {
         }
 
         // 用户校验规则
-        String usernameRule = "/[a-zA-Z][a-zA-Z0-9_]{4,15}/";
         if (!username.matches(usernameRule)) {
             responseJson.add("code", new JsonPrimitive("003"));
             responseJson.add("msg", new JsonPrimitive("用户名不合法(以字母开头，允许5-16字节，允许字母数字下划线)"));
@@ -139,7 +139,6 @@ public class UserService {
         }
 
         // 密码校验规则
-        String passwordRule = "/[a-zA-Z]\\w{5,17}/";
         if (!password.matches(passwordRule)) {
             responseJson.add("code", new JsonPrimitive("003"));
             responseJson.add("msg", new JsonPrimitive("密码不合法(以字母开头，长度在6~18之间，只能包含字母、数字和下划线)"));

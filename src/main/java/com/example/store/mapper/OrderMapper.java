@@ -26,6 +26,7 @@ public interface OrderMapper {
 
     int deleteShoppingCart(@Param("user_id") int userId, @Param("product_id") int productId);
 
+    int reduceProductByProductId(@Param("product_id") int productId, @Param("num") int num);
 
-
+    int increaseSalesByProductId(@Param("product_id") int productId, @Param("num") int num);
 }

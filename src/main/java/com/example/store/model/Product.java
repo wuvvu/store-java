@@ -14,6 +14,7 @@ public class Product {
     private BigDecimal product_selling_price;
     private int product_num;
     private int product_sales;
+    private boolean isDeleted;
 
     public int getProduct_id() {
         return product_id;
@@ -93,5 +94,13 @@ public class Product {
 
     public void setProduct_sales(int product_sales) {
         this.product_sales = product_sales;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 }

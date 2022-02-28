@@ -7,7 +7,7 @@
 
     <resultMap id="UserResult" type="User">
         <id property="user_id" column="user_id" />
-        <result property="username" column="userName" />
+        <result property="userName" column="userName" />
         <result property="password" column="password" />
         <result property="phoneNumber" column="userPhoneNumber" />
     </resultMap>

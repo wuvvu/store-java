@@ -11,9 +11,10 @@ public class ShoppingCart {
 
     private String productName;
     private String productImg;
-    private BigDecimal product_price;
+    private BigDecimal price;
     private int product_num;
     private boolean check;
+    private int productID;
 
     public int getId() {
         return id;
@@ -37,6 +38,15 @@ public class ShoppingCart {
 
     public void setProduct_id(int product_id) {
         this.product_id = product_id;
+        this.productID = product_id;
+    }
+
+    public int getProductID() {
+        return productID;
+    }
+
+    public void setProductID(int productID) {
+        this.productID = productID;
     }
 
     public int getNum() {
@@ -63,12 +73,12 @@ public class ShoppingCart {
         this.productImg = productImg;
     }
 
-    public BigDecimal getProduct_price() {
-        return product_price;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setProduct_price(BigDecimal product_price) {
-        this.product_price = product_price;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     public int getProduct_num() {

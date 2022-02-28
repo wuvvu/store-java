@@ -16,7 +16,7 @@
     </resultMap>
 
     <select id="getOrderIdByUserId" resultMap="OrderResult">
-        select order_id from orders where user_id = #{user_id} group by order_id desc
+        select order_id from orders where user_id = #{user_id} group by order_id order by order_id desc
     </select>
 
     <select id="getOrderByUserId" resultMap="OrderResult">
@@ -62,6 +62,13 @@
         delete from shoppingCart where user_id = #{user_id} and product_id = #{product_id}
     </delete>
 
+    <update id="reduceProductByProductId">
+        update product set product_num = product_num - #{num} where product_id = #{product_id}
+    </update>
+
+    <update id="increaseSalesByProductId">
+        update product set product_sales = product_sales + #{num} where product_id = #{product_id}
+    </update>
 
 </mapper>
 
