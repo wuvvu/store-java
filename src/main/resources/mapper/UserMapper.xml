@@ -3,7 +3,7 @@
 <mapper namespace="com.example.store.mapper.UserMapper">
 
     <!-- 二级缓存-->
-    <cache readOnly="true" />
+    <!--<cache readOnly="true" />-->
 
     <resultMap id="UserResult" type="User">
         <id property="user_id" column="user_id" />

@@ -3,7 +3,7 @@
 <mapper namespace="com.example.store.mapper.AdminMapper">
 
     <!-- 二级缓存-->
-    <cache readOnly="true" />
+    <!--<cache readOnly="true" />-->
 
     <resultMap id="ProductResult" type="Product">
         <id property="product_id" column="product_id" />

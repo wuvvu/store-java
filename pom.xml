@@ -11,12 +11,14 @@
 
     <groupId>com.example</groupId>
     <artifactId>store</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>store</name>
     <description>store</description>
 
     <properties>
         <java.version>1.8</java.version>
+        <!-- 跳过测试 -->
+        <skipTests>true</skipTests>
     </properties>
 
     <dependencies>
