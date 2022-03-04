@@ -59,7 +59,9 @@ public class ProductService {
         String categoryName = jsonObject.get("categoryName").getAsString();
 
         Category category = productMapper.getCategoryByName(categoryName);
-        List<Product> productList = productMapper.getPromoProductByCategoryId(category.getCategory_id());
+        List<Category> categoryList = new ArrayList<>();
+        categoryList.add(category);
+        List<Product> productList = productMapper.getPromoProductByCategoryId(categoryList);
 
         Gson gson = new Gson();
         JsonObject responseJson = new JsonObject();
@@ -86,10 +88,7 @@ public class ProductService {
             categoryList.add(productMapper.getCategoryByName(categoryName));
         }
 
-        List<Product> productList = new ArrayList<>();
-        for (Category category : categoryList) {
-            productList.addAll(productMapper.getPromoProductByCategoryId(category.getCategory_id()));
-        }
+        List<Product> productList = new ArrayList<>(productMapper.getPromoProductByCategoryId(categoryList));
 
         Gson gson = new Gson();
         JsonObject responseJson = new JsonObject();
@@ -111,10 +110,21 @@ public class ProductService {
         int pageSize = jsonObject.get("pageSize").getAsInt();
         // int offset = (currentPage - 1) * pageSize;
 
-        int categoryId = jsonObject.get("categoryID").getAsInt();
+        List<Integer> categoryIdList = new ArrayList<>();
+        if (jsonObject.get("categoryID").isJsonArray()) {
+            JsonArray categoryIdArray = jsonObject.get("categoryID").getAsJsonArray();
+            for (JsonElement jsonElement : categoryIdArray) {
+                Integer categoryID = jsonElement.getAsInt();
+                categoryIdList.add(categoryID);
+            }
+        }
+        if (jsonObject.get("categoryID").isJsonPrimitive()) {
+            int categoryId = jsonObject.get("categoryID").getAsInt();
+            categoryIdList.add(categoryId);
+        }
 
         PageHelper.startPage(currentPage, pageSize);
-        List<Product> productList = productMapper.getProductByCategoryId(categoryId);
+        List<Product> productList = productMapper.getProductByCategoryIdList(categoryIdList);
 
         PageInfo<Product> pageInfo = new PageInfo<>(productList);
 
@@ -238,18 +248,6 @@ public class ProductService {
 
         return responseJson.toString();
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

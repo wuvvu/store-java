@@ -14,6 +14,7 @@ public class Order {
 
     private String product_name;
     private String product_picture;
+    private String user_name;
 
     public int getId() {
         return id;
@@ -85,5 +86,13 @@ public class Order {
 
     public void setProduct_picture(String product_picture) {
         this.product_picture = product_picture;
+    }
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
     }
 }

@@ -39,4 +39,9 @@ public class AdminController {
         return adminService.getAllProduct(json);
     }
 
+    @RequestMapping("/admin/order/getOrder")
+    public String getOrder(@RequestBody String json) {
+        return adminService.getOrder(json);
+    }
+
 }

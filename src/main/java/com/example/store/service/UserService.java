@@ -218,7 +218,7 @@ public class UserService {
             Product product = productMapper.getProductById(collect.getProduct_id());
             productList.add(product);
         }
-        responseJson.add("code", new JsonPrimitive("1"));
+        responseJson.add("code", new JsonPrimitive("001"));
         responseJson.add("collectList", new Gson().toJsonTree(productList).getAsJsonArray());
         return responseJson.toString();
     }

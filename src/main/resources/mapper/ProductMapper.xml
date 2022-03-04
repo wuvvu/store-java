@@ -3,7 +3,7 @@
 <mapper namespace="com.example.store.mapper.ProductMapper">
 
     <!-- 二级缓存-->
-    <!--<cache readOnly="true" />-->
+    <cache readOnly="true" />
 
     <resultMap id="CarouselResult" type="Carousel">
         <id property="carousel_id" column="id" />
@@ -61,11 +61,17 @@
     </select>
 
     <select id="getPromoProductByCategoryId" resultMap="ProductResult">
-        select * from product where category_id = #{categoryId} order by product_sales desc limit 7
+        select * from product where category_id in
+        <foreach collection="categoryList" item="category" index="index" separator="," open="(" close=")">
+            #{category.category_id}
+        </foreach>
+        and isDeleted = 0
+        order by product_sales desc
+        limit 7
     </select>
 
     <select id="getProductByCategoryId" resultMap="ProductResult">
-        select * from product where category_id = #{categoryId} order by product_sales desc
+        select * from product where category_id = #{categoryId} and isDeleted = 0 order by product_sales desc
     </select>
 
     <select id="getProductBySearch" resultMap="ProductResult">
@@ -74,6 +80,15 @@
            or product_title like concat('%', #{search}, '%')
            or product_intro like concat('%', #{search}, '%'))
             and isDeleted = 0
+        order by product_sales desc
+    </select>
+
+    <select id="getProductByCategoryIdList" resultMap="ProductResult">
+        select * from product where category_id in
+        <foreach collection="categoryIdList" item="categoryId" index="index" separator="," open="(" close=")">
+            #{categoryId}
+        </foreach>
+        and isDeleted = 0
         order by product_sales desc
     </select>
 

@@ -1,5 +1,6 @@
 package com.example.store.mapper;
 
+import com.example.store.model.Order;
 import com.example.store.model.Product;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -22,4 +23,8 @@ public interface AdminMapper {
     int deletePictureByProductId(@Param("product_id") int productId);
 
     List<Product> getAllProduct();
+
+    List<Order> getOrderIdBySearch(@Param("search") String search);
+
+    List<Order> getOrderBySearch(@Param("search") String search);
 }

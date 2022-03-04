@@ -1,6 +1,8 @@
 package com.example.store.service;
 
 import com.example.store.mapper.AdminMapper;
+import com.example.store.mapper.ProductMapper;
+import com.example.store.model.Order;
 import com.example.store.model.Product;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -15,8 +17,11 @@ public class AdminService {
 
     private final AdminMapper adminMapper;
 
-    public AdminService(AdminMapper adminMapper) {
+    private final ProductMapper productMapper;
+
+    public AdminService(AdminMapper adminMapper, ProductMapper productMapper) {
         this.adminMapper = adminMapper;
+        this.productMapper = productMapper;
     }
 
     /**
@@ -165,6 +170,48 @@ public class AdminService {
         responseJson.add("Product", gson.toJsonTree(productList).getAsJsonArray());
         responseJson.add("total", new JsonPrimitive(pageInfo.getTotal()));
 
+        return responseJson.toString();
+    }
+
+    /**
+     * 管理员端获取订单信息
+     * @param json 前端请求json(页码、偏移量、搜索)
+     * @return 订单信息
+     */
+    public String getOrder(String json) {
+        JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
+
+        int currentPage = jsonObject.get("currentPage").getAsInt();
+        int pageSize = jsonObject.get("pageSize").getAsInt();
+
+        String search = jsonObject.get("search").getAsString();
+
+        PageHelper.startPage(currentPage, pageSize);
+        List<Order> orderIdList = adminMapper.getOrderIdBySearch(search);
+
+        List<Order> orderList = adminMapper.getOrderBySearch(search);
+
+        List<List<Order>> ordersList = new ArrayList<>();
+
+        for (Order orderForId : orderIdList) {
+            long orderId = orderForId.getOrder_id();
+            List<Order> tempOrder = new ArrayList<>();
+
+            for (Order order : orderList) {
+                if (orderId == order.getOrder_id()) {
+                    Product product = productMapper.getProductById(order.getProduct_id());
+                    order.setProduct_name(product.getProduct_name());
+                    order.setProduct_picture(product.getProduct_picture());
+
+                    tempOrder.add(order);
+                }
+            }
+            ordersList.add(tempOrder);
+        }
+
+        JsonObject responseJson = new JsonObject();
+        responseJson.add("status", new JsonPrimitive(0));
+        responseJson.add("orders", new Gson().toJsonTree(ordersList).getAsJsonArray());
         return responseJson.toString();
     }
 }

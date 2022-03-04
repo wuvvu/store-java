@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://server-4570:3306/storeDB?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong #&allowMultiQueries=true
+    url: jdbc:mysql://home.wuvvu.cn:33066/storeDB?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong #&allowMultiQueries=true
     hikari:
       pool-name: HikariCP
       username: wu

@@ -21,9 +21,11 @@ public interface ProductMapper {
 
     List<ProductPicture> getDetailsPictureByProductId(@Param("productId") int productId);
 
-    List<Product> getPromoProductByCategoryId(@Param("categoryId") int id);
+    List<Product> getPromoProductByCategoryId(@Param("categoryList") List<Category> categoryList);
 
     List<Product> getProductByCategoryId(@Param("categoryId") int id);
 
     List<Product> getProductBySearch(@Param("search") String search);
+
+    List<Product> getProductByCategoryIdList(@Param("categoryIdList") List<Integer> categoryIdList);
 }

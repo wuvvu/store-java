@@ -3,7 +3,7 @@
 <mapper namespace="com.example.store.mapper.AdminMapper">
 
     <!-- 二级缓存-->
-    <!--<cache readOnly="true" />-->
+    <cache readOnly="true" />
 
     <resultMap id="ProductResult" type="Product">
         <id property="product_id" column="product_id" />
@@ -57,6 +57,52 @@
     <delete id="deletePictureByProductId">
         delete from product_picture where product_id = #{product_id}
     </delete>
+
+    <resultMap id="OrderResult" type="Order">
+        <id property="id" column="id" />
+        <result property="order_id" column="order_id" />
+        <result property="user_id" column="user_id" />
+        <result property="product_id" column="product_id" />
+        <result property="product_num" column="product_num" />
+        <result property="product_price" column="product_price" />
+        <result property="order_time" column="order_time" />
+        <result property="user_name" column="userName" />
+    </resultMap>
+
+    <select id="getOrderIdBySearch" resultMap="OrderResult">
+        select o.order_id
+        from orders o , product p, category c, users u
+        where
+            o.product_id = p.product_id and
+            p.category_id = c.category_id and
+            u.user_id = o.user_id
+            <if test="search != null and search != ''">
+                and(
+                o.user_id = #{search} or
+                p.product_name like concat('%', #{search}, '%') or
+                c.category_name like concat('%', #{search}, '%')
+                )
+            </if>
+        group by o.order_id
+        order by o.order_id desc
+    </select>
+
+    <select id="getOrderBySearch" resultMap="OrderResult">
+        select *
+        from orders o , product p, category c, users u
+        where
+            o.product_id = p.product_id and
+            p.category_id = c.category_id and
+            u.user_id = o.user_id
+          <if test="search != null and search != ''">
+            and(
+            o.user_id = #{search} or
+            p.product_name like concat('%', #{search}, '%') or
+            c.category_name like concat('%', #{search}, '%')
+            )
+          </if>
+        order by o.order_time desc
+    </select>
 
 </mapper>
 
