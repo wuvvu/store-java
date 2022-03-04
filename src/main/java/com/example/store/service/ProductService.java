@@ -10,6 +10,7 @@ import com.google.gson.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -90,10 +91,28 @@ public class ProductService {
 
         List<Product> productList = new ArrayList<>(productMapper.getPromoProductByCategoryId(categoryList));
 
+        List<Product> newProductList = new ArrayList<>(Collections.nCopies(7, null));
+
+        List<Integer> randomArray = new ArrayList<>();
+        for (int i = 0; i < productList.size(); i++) {
+            randomArray.add(i);
+        }
+
+        for (int i = 0; i < productList.size(); i++){
+            int iRandNum = (int)(Math.random() * productList.size());
+            int temp = randomArray.get(iRandNum);
+            randomArray.set(iRandNum, randomArray.get(i));
+            randomArray.set(i, temp);
+        }
+
+        for (int i = 0; i < productList.size(); i++) {
+            newProductList.set(randomArray.get(i), productList.get(i));
+        }
+
         Gson gson = new Gson();
         JsonObject responseJson = new JsonObject();
         responseJson.add("code", new JsonPrimitive("001"));
-        responseJson.add("Product", gson.toJsonTree(productList));
+        responseJson.add("Product", gson.toJsonTree(newProductList));
 
         return responseJson.toString();
     }
