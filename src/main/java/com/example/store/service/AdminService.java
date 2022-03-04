@@ -209,9 +209,13 @@ public class AdminService {
             ordersList.add(tempOrder);
         }
 
+
+        PageInfo<Order> pageInfo = new PageInfo<>(orderIdList);
+
         JsonObject responseJson = new JsonObject();
         responseJson.add("status", new JsonPrimitive(0));
         responseJson.add("orders", new Gson().toJsonTree(ordersList).getAsJsonArray());
+        responseJson.add("total", new JsonPrimitive(pageInfo.getTotal()));
         return responseJson.toString();
     }
 }
