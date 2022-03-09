@@ -104,6 +104,14 @@
         order by o.order_time desc
     </select>
 
+    <select id="getCategorySales" resultType="java.util.HashMap">
+        select
+            c.category_id, c.category_name, sum(p.product_sales) as 'total'
+        from category c, product p
+        where c.category_id = p.category_id
+        group by c.category_id
+    </select>
+
 </mapper>
 
 

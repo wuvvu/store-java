@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface AdminMapper {
@@ -27,4 +28,6 @@ public interface AdminMapper {
     List<Order> getOrderIdBySearch(@Param("search") String search);
 
     List<Order> getOrderBySearch(@Param("search") String search);
+
+    List<Map<String, Object>> getCategorySales();
 }

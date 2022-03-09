@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AdminService {
@@ -216,6 +217,14 @@ public class AdminService {
         responseJson.add("status", new JsonPrimitive(0));
         responseJson.add("orders", new Gson().toJsonTree(ordersList).getAsJsonArray());
         responseJson.add("total", new JsonPrimitive(pageInfo.getTotal()));
+        return responseJson.toString();
+    }
+
+    public String getCategorySales() {
+        List<Map<String, Object>> categorySalesList = adminMapper.getCategorySales();
+        JsonObject responseJson = new JsonObject();
+        responseJson.add("status", new JsonPrimitive(0));
+        responseJson.add("categorySales", new Gson().toJsonTree(categorySalesList).getAsJsonArray());
         return responseJson.toString();
     }
 }
