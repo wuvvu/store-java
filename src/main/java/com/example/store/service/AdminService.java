@@ -220,6 +220,10 @@ public class AdminService {
         return responseJson.toString();
     }
 
+    /**
+     * 管理员端获取每个分类的销量
+     * @return 返回销量json
+     */
     public String getCategorySales() {
         List<Map<String, Object>> categorySalesList = adminMapper.getCategorySales();
         JsonObject responseJson = new JsonObject();
